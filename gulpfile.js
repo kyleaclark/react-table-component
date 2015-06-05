@@ -89,14 +89,6 @@ gulp.task('images', function() {
         .pipe($.size());
 });
 
-// Fonts
-gulp.task('fonts', function() {
-    return gulp.src(require('main-bower-files')({
-            filter: '**/*.{eot,svg,ttf,woff,woff2}'
-        }).concat('app/fonts/**/*'))
-        .pipe(gulp.dest('dist/fonts'));
-});
-
 // Clean
 gulp.task('clean', function(cb) {
     $.cache.clearAll();
@@ -104,7 +96,7 @@ gulp.task('clean', function(cb) {
 });
 
 // Bundle
-gulp.task('bundle', ['styles', 'scripts', 'bower'], function() {
+gulp.task('bundle', ['styles', 'scripts'], function() {
     return gulp.src('./app/*.html')
         .pipe($.useref.assets())
         .pipe($.useref.restore())
@@ -113,21 +105,12 @@ gulp.task('bundle', ['styles', 'scripts', 'bower'], function() {
 });
 
 // Build bundle
-gulp.task('buildBundle', ['styles', 'buildScripts', 'bower'], function() {
+gulp.task('buildBundle', ['styles', 'buildScripts'], function() {
     return gulp.src('./app/*.html')
         .pipe($.useref.assets())
         .pipe($.useref.restore())
         .pipe($.useref())
         .pipe(gulp.dest('dist'));
-});
-
-// Bower helper
-gulp.task('bower', function() {
-    gulp.src('app/bower_components/**/*.js', {
-            base: 'app/bower_components'
-        })
-        .pipe(gulp.dest('dist/bower_components/'));
-
 });
 
 // Json
@@ -146,7 +129,7 @@ gulp.task('extras', function() {
 });
 
 // Serve
-gulp.task('serve', ['html', 'fonts', 'bundle'], function() {
+gulp.task('serve', ['html', 'bundle'], function() {
 
     browserSync({
         notify: false,
@@ -168,7 +151,7 @@ gulp.task('serve', ['html', 'fonts', 'bundle'], function() {
 });
 
 // Build
-gulp.task('dist', ['html', 'buildBundle', 'images', 'fonts', 'extras'], function() {
+gulp.task('dist', ['html', 'buildBundle', 'images', 'extras'], function() {
     gulp.src('dist/scripts/app.js')
         .pipe($.uglify())
         .pipe($.stripDebug())
